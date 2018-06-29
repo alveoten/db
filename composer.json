@@ -2,7 +2,7 @@
   "name": "tabusoft/db",
   "description": "Another PDO wrapper",
   "type": "library",
-  "license": "GPL v3",
+  "license": "GPL-3.0+",
   "authors": [
     {
       "name": "Marco Tabucchi",
