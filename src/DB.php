@@ -64,11 +64,16 @@ class DB extends PDO
 
         if( isset($this->events[self::EVENT_POST_QUERY])
             AND $this->events[self::EVENT_POST_QUERY] instanceof DBEventsQueryInterface ){
+
+            $debug = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,1);
+
             $this->events[self::EVENT_POST_QUERY]($this, $sql, [
                 "values" => $values,
                 "compiled_query" => $compiled_query,
                 "execution_time" => $time,
-                "md5" => md5($sql)
+                "md5" => md5($sql.$debug[0]["line"].$debug[0]["file"]),
+                "line" => $debug[0]["line"],
+                "file" => $debug[0]["file"]
             ]);
         }
 
