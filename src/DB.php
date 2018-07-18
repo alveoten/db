@@ -18,6 +18,10 @@ class DB extends PDO
     const EVENT_PRE_QUERY = "pre_query";
     const EVENT_POST_QUERY = "post_query";
 
+    private $host;
+    private $port;
+    private $database;
+
     /**
      * @param string $sql use ? for text, integer, text, array.
      * @param array $values
@@ -176,6 +180,58 @@ class DB extends PDO
 
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+        $this->host = $host;
+        $this->port = $port;
+        $this->database = $database;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param mixed $host
+     */
+    public function setHost($host): void
+    {
+        $this->host = $host;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param int $port
+     */
+    public function setPort(int $port): void
+    {
+        $this->port = $port;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param mixed $database
+     */
+    public function setDatabase($database): void
+    {
+        $this->database = $database;
     }
 
 }
