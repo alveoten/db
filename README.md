@@ -47,3 +47,20 @@ $config = new \Tabusoft\DB\DBFactoryConfig("localhost", 'db-name', 'username', '
 $db = \Tabusoft\DB\DBFactory::getInstance($config);
 ```
 
+### Query events
+You can add query events. Pre and Post execution:
+```php
+
+class Event implements \Tabusoft\DB\DBEventsQueryInterface
+{
+    public function __invoke(DB $db, $sql, array $infos)
+    {
+        dump($infos);
+    }
+}
+
+$db = \Tabusoft\DB\DBFactory::getInstance($config);
+$db->addEvent(new Event(), DB::EVENT_PRE_QUERY);
+$db->addEvent(new Event(), DB::EVENT_POST_QUERY);
+```
+

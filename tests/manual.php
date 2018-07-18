@@ -15,9 +15,19 @@ foreach($qres as $r){
 }
 
 
+class Event implements \Tabusoft\DB\DBEventsQueryInterface
+{
+    public function __invoke(DB $db, $sql, array $infos)
+    {
+        dump($infos);
+    }
+}
+
+
 $config = new DBFactoryConfig("localhost","test","test","test");
 
 $db = \Tabusoft\DB\DBFactory::getInstance($config);
+$db->addEvent(new Event(), DB::EVENT_POST_QUERY);
 
 $qres = $db->query("select * FROM tabellaDue");
 echo PHP_EOL."trovati: ".$qres->rowCount().PHP_EOL;

@@ -2,16 +2,21 @@
 
 namespace Tabusoft\DB;
 
-use Aura\Cli\Exception;
 use PDO;
 
 class DB extends PDO
 {
 
     public $_raw_query = [];
+
     public $_compiled_query = [];
 
     private $query_debug = [];
+
+    private $events = [];
+
+    const EVENT_PRE_QUERY = "pre_query";
+    const EVENT_POST_QUERY = "post_query";
 
     /**
      * @param string $sql use ? for text, integer, text, array.
@@ -20,7 +25,15 @@ class DB extends PDO
      */
     public function query(string $sql, array $values = [])
     {
-        $start_time = microtime(true);
+
+       if( isset($this->events[self::EVENT_PRE_QUERY])
+           AND $this->events[self::EVENT_PRE_QUERY] instanceof DBEventsQueryInterface ){
+           $this->events[self::EVENT_PRE_QUERY]($this, $sql, [
+               "values" => $values
+           ]);
+       }
+
+       $start_time = microtime(true);
 
 
        if (count($values) !== 0) {
@@ -49,8 +62,22 @@ class DB extends PDO
         $this->_raw_query[] = $sql;
         $this->_compiled_query[] = $compiled_query;
 
+        if( isset($this->events[self::EVENT_POST_QUERY])
+            AND $this->events[self::EVENT_POST_QUERY] instanceof DBEventsQueryInterface ){
+            $this->events[self::EVENT_POST_QUERY]($this, $sql, [
+                "values" => $values,
+                "compiled_query" => $compiled_query,
+                "execution_time" => $time,
+                "md5" => md5($sql)
+            ]);
+        }
+
         return $stm;
 
+    }
+
+    public function addEvent(DBEventsQueryInterface $event, $type){
+        $this->events[$type] = $event;
     }
 
     /**
