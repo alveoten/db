@@ -138,7 +138,8 @@ class DB extends PDO
         $new_values = [];
         foreach($sql_pieces as $i => $s){
             $sql .= $s;
-            if(isset($values[$i]) ) {
+            if(array_key_exists($i,$values) ) {
+
                 if (!is_array($values[$i])) {
                     $sql .= '?';
                     $new_values[] = $values[$i];
