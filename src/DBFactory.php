@@ -5,7 +5,7 @@ namespace Tabusoft\DB;
 class DBFactory
 {
 
-    static $instances = null;
+    static $instances = [];
     static $config = null;
 
 
@@ -18,7 +18,7 @@ class DBFactory
     public static function getInstance(DBFactoryConfig $config)
     {
 
-        if (self::$instances[$config->getHash()] === null) {
+        if (!isset(self::$instances[$config->getHash()])) {
 
             self::$instances[$config->getHash()] = new DB(
                 $config->getHost(),
